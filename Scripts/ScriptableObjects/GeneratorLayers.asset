@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e44ba79fd985914eb691d4615f9754f, type: 3}
+  m_Name: GeneratorLayers
+  m_EditorClassIdentifier: 
+  noiseLayers:
+  - prefabs:
+    - {fileID: 4336019178856750253, guid: cc7e50eacaefcf748911ed690048474d, type: 3}
+    - {fileID: 8155539472610568789, guid: 94658ccbf520a5643adca8f871f335a6, type: 3}
+    - {fileID: 7830740751295879042, guid: cbfee3f7394dcfb459277d76ef6f928f, type: 3}
+    thresholds:
+    - 0.3
+    - 0.6
+    - 1
+    NoiseScale: 0.09
+  - prefabs:
+    - {fileID: 2766538140661456388, guid: 6ce423847dcf39d42b477e09042f27a0, type: 3}
+    thresholds:
+    - 0.1
+    NoiseScale: 0.5
+  - prefabs:
+    - {fileID: 7521933956891376000, guid: d507649f99d8e024d9b00423b4285783, type: 3}
+    thresholds:
+    - 0.1
+    NoiseScale: 0.7
