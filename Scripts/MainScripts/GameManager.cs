@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     private Fractions[] TeamCount;
     [SerializeField]
     bool a;
+    [SerializeField]
+    int FrameRate = 60;
 
     private TeamUnit selectedUnit = null;
     private SoliderFactory _productFactory;
@@ -30,8 +32,15 @@ public class GameManager : MonoBehaviour
     private int createdObjectIndex = 0;
     private TeamController teamController;
 
+    public TeamController TeamController
+    {
+        get { return teamController; }
+    }
+
     private void Start()
     {
+        Application.targetFrameRate = FrameRate;
+
         _productFactory = GetComponent<SoliderFactory>();
 
         teamController = new TeamController(TeamCount);
@@ -87,7 +96,7 @@ public class GameManager : MonoBehaviour
         AddUnitToScene(name).Forget();
     }
 
-    private void SelectUnit(TeamUnit unit, List<TeamUnit> selectedUn)
+    public void SelectUnit(TeamUnit unit, List<TeamUnit> selectedUn)
     {
         foreach (var item in selectedUn)
         {

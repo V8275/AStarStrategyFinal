@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class OutlineOnHover : MonoBehaviour
@@ -33,6 +34,7 @@ public class OutlineOnHover : MonoBehaviour
     private void OnMouseOver()
     {
         SetLayerForAllObjects(LayerMask.NameToLayer(OutlineLayer));
+        if (Input.GetMouseButtonDown(0)) SelectUnit();
     }
 
     private void OnMouseExit()
@@ -48,6 +50,24 @@ public class OutlineOnHover : MonoBehaviour
             {
                 obj.layer = layerIndex;
             }
+        }
+    }
+
+    private void SelectUnit()
+    {
+        var gameManager = FindFirstObjectByType<GameManager>();
+        var currentUnit = GetComponent<IUnit>();
+        var curUnits = gameManager.TeamController.GetCurrentTeamUnits();
+
+        TeamUnit selectedUnit = curUnits.FirstOrDefault(a => a.unit == currentUnit);
+
+        if (selectedUnit != null)
+        {
+            gameManager.SelectUnit(selectedUnit, curUnits);
+        }
+        else
+        {
+            Debug.LogWarning("Selected unit not found in current team units");
         }
     }
 }

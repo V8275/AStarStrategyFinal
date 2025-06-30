@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class InputManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private float moveDelay = 0.5f;
     [SerializeField] private float yPlayerOffset = 0.5f;
     [SerializeField] private string GroundTag = "Ground";
+    [SerializeField] private string PlayerTag = "Player";
     [SerializeField] private int Iterations = 5000;
     [SerializeField] private AnimationManager animationManager;
 
@@ -18,7 +20,7 @@ public class InputManager : MonoBehaviour
     private Vector2Int? targetLocation;
     private int[,] grid;
     private Coroutine calculate;
-    private bool move = false;
+    private bool move = false, attack = false;
 
     public void Init(Vector2Int startloc)
     {
@@ -31,31 +33,42 @@ public class InputManager : MonoBehaviour
 
     public bool Calculate()
     {
-        if (Input.GetMouseButtonDown(0) && !move)
+        if (Input.GetMouseButtonDown(0))
         {
-            try
-            {
-                move = true;
-                if (calculate != null)
-                    StopCoroutine(calculate);
-                targetLocation = GetMouseGridPosition();
+            if (!move)
+                try
+                {
+                    move = true;
+                    if (calculate != null)
+                        StopCoroutine(calculate);
+                    targetLocation = GetMouseGridPosition();
 
-                if (targetLocation != null && CheckPathExists(startLocation, (Vector2Int)targetLocation))
-                {
-                    calculate = StartCoroutine(MoveAlongPath(startLocation, (Vector2Int)targetLocation));
+                    if (targetLocation != null && CheckPathExists(startLocation, (Vector2Int)targetLocation))
+                    {
+                        calculate = StartCoroutine(MoveAlongPath(startLocation, (Vector2Int)targetLocation));
                         return true;
+                    }
+                    else
+                    {
+                        var endGroundTile = GameObject.Find($"Cell_{targetLocation.Value.x}_{targetLocation.Value.y}");
+                        var fx = endGroundTile.GetComponent<SelectFXScript>();
+                        if (fx) fx.Select(false);
+                        move = false;
+                        return false;
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    move = false;
+                    if (calculate != null)
+                        StopCoroutine(calculate);
                     return false;
                 }
-            }
-            catch (Exception)
+
+            if (attack) 
             {
-                if (calculate != null)
-                    StopCoroutine(calculate);
-                return false;
+                //TODO: attack logic
+
+                attack = false;
             }
         }
         return false;
@@ -73,7 +86,7 @@ public class InputManager : MonoBehaviour
     private void RotateTowardsTarget(Vector3 targetPosition)
     {
         Vector3 direction = targetPosition - playerObject.transform.position;
-        direction.y = 0; 
+        direction.y = 0;
 
         if (direction != Vector3.zero)
         {
@@ -109,7 +122,7 @@ public class InputManager : MonoBehaviour
 
                 while (Vector3.Distance(playerObject.transform.position, targetPosition) > 0.1f)
                 {
-                    playerObject.transform.position = 
+                    playerObject.transform.position =
                         Vector3.MoveTowards(playerObject.transform.position, targetPosition, Time.deltaTime * 5f);
                     yield return null;
                 }
@@ -136,7 +149,7 @@ public class InputManager : MonoBehaviour
         {
             move = false;
             if (fx) fx.Select(false);
-            
+
             Debug.Log("Path not found!");
         }
     }
@@ -156,7 +169,9 @@ public class InputManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
-            if (hit.collider.gameObject.CompareTag(GroundTag))
+            GameObject hitObject = hit.collider.gameObject;
+
+            if (hitObject.CompareTag(GroundTag))
             {
                 var groundTile = hit.collider.gameObject;
 
@@ -171,12 +186,12 @@ public class InputManager : MonoBehaviour
                     return new Vector2Int(x, y);
                 }
             }
-            //Debug.Log($"Hit: {hit.collider.name}");
             else
             {
                 move = false;
                 throw new ArgumentException("This cant be target");
             }
+            //Debug.Log($"Hit: {hit.collider.name}");
         }
         return null;
     }
