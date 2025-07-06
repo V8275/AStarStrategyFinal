@@ -11,4 +11,6 @@ public interface IUnit
     public void SetName(string name);
     public void DisableUI();
     public void EnableUI();
+    public HealthManager GetHealthController();
+    public Vector3 GetCurrentPosition();
 }

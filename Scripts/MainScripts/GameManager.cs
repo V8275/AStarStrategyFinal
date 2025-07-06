@@ -109,11 +109,18 @@ public class GameManager : MonoBehaviour
 
     public void RemoveUnit()
     {
-        teamController.RemoveUnitInCurrentTeam(selectedUnit);
+        teamController.RemoveUnitInTeam(selectedUnit);
         selectedUnit.unit.DestroyUnit();
         selectedUnit = null;
         selectedUnit = teamController.GetCurrentTeamUnits().Last();
         selectedUnit.unit.WaitForMove(false);
+    }
+
+    public void RemoveUnit(TeamUnit DestructedUnit)
+    {
+        Team team = teamController.GetTeamByUnit(DestructedUnit);
+        teamController.RemoveUnitInTeam(team, DestructedUnit);
+        DestructedUnit.unit.DestroyUnit();
     }
 
     private async UniTaskVoid AddUnitToScene(string name)

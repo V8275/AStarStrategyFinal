@@ -122,6 +122,8 @@ GameObject:
   - component: {fileID: 6241280937252145339}
   - component: {fileID: -790150170633844204}
   - component: {fileID: 8690940249123839481}
+  - component: {fileID: -5496132453694332202}
+  - component: {fileID: 4736906200474149009}
   m_Layer: 0
   m_Name: Player_Clone
   m_TagString: Player
@@ -166,6 +168,7 @@ MonoBehaviour:
   moveDelay: 0.01
   yPlayerOffset: 0.7
   GroundTag: Ground
+  PlayerTag: Player
   Iterations: 1000
   animationManager: {fileID: -790150170633844204}
 --- !u!114 &428034985511437651
@@ -238,6 +241,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6013814, y: 0.8059821, z: 0.60066235}
   m_Center: {x: -0.001763761, y: -0.09700894, z: -0.0014042258}
+--- !u!114 &-5496132453694332202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8686204160346223778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4cd435f84e089a4998f00dae72c6c8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttackDamage: 1
+  attackRadius: 2
+--- !u!114 &4736906200474149009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8686204160346223778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 707ccc53ca4eddd4ab5c42326d9bb2b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 1
 --- !u!1001 &3197644709715682715
 PrefabInstance:
   m_ObjectHideFlags: 0

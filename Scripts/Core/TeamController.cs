@@ -32,14 +32,46 @@ public class TeamController
         return teams[TeamTurn].units;
     }
 
+    public List<Team> GetOtherTeams()
+    {
+        List<Team> otherTeams = teams.Where(a => a != teams[TeamTurn]).ToList();
+        return otherTeams;
+    }
+
+    public Team GetTeamByUnit(TeamUnit unit)
+    {
+        Team resultTeam = null;
+
+        for (int i = 0; i < teams.Count; i++)
+        {
+            if (teams[i].units.Contains(unit))
+            {
+                resultTeam = teams[i];
+                break;
+            }
+        }
+
+        return resultTeam;
+    }
+
+    public List<TeamUnit> GetTeamUnits(Team team)
+    {
+        return team.units;
+    }
+
     public void AddUnitInCurrentTeam(TeamUnit unit)
     {
         teams[TeamTurn].units.Add(unit);
     }
 
-    public void RemoveUnitInCurrentTeam(TeamUnit unit)
+    public void RemoveUnitInTeam(TeamUnit unit)
     {
         teams[TeamTurn].units.Remove(unit);
+    }
+
+    public void RemoveUnitInTeam(Team team, TeamUnit unit)
+    {
+        team.units.Remove(unit);
     }
 
     public void NextTeamTurn()

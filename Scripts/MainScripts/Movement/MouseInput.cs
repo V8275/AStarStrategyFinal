@@ -2,17 +2,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class OutlineOnHover : MonoBehaviour
+public class MouseInput : MonoBehaviour
 {
     [SerializeField] private string DefaultLayer = "Default";
     [SerializeField] private string OutlineLayer = "Outline";
     [SerializeField] private bool affectOnlyObjectsWithMaterials = true;
 
     private List<GameObject> objectsToOutline = new List<GameObject>();
+    private IUnit currentUnit;
+    private AttackManager atkManager;
 
     private void Start()
     {
         CollectChildObjects(transform);
+        currentUnit = GetComponent<IUnit>();
+        atkManager = GetComponent<AttackManager>();
     }
 
     private void CollectChildObjects(Transform parent)
@@ -35,6 +39,7 @@ public class OutlineOnHover : MonoBehaviour
     {
         SetLayerForAllObjects(LayerMask.NameToLayer(OutlineLayer));
         if (Input.GetMouseButtonDown(0)) SelectUnit();
+        if (Input.GetMouseButtonDown(1)) AttackSelectedUnit();
     }
 
     private void OnMouseExit()
@@ -53,10 +58,30 @@ public class OutlineOnHover : MonoBehaviour
         }
     }
 
+    private void AttackSelectedUnit()
+    {
+        var gameManager = FindFirstObjectByType<GameManager>();
+        var otherTeams = gameManager.TeamController.GetOtherTeams();
+
+        TeamUnit selectedUnit = null;
+
+        for (int i = 0; i < otherTeams.Count; i++)
+        {
+            selectedUnit = otherTeams[i].units.FirstOrDefault(a => a.unit == currentUnit);
+            if (selectedUnit != null)
+            {
+                atkManager.Attack(selectedUnit);
+            }
+            else
+            {
+                Debug.LogWarning("Selected unit not found in current team units");
+            }
+        }
+    }
+
     private void SelectUnit()
     {
         var gameManager = FindFirstObjectByType<GameManager>();
-        var currentUnit = GetComponent<IUnit>();
         var curUnits = gameManager.TeamController.GetCurrentTeamUnits();
 
         TeamUnit selectedUnit = curUnits.FirstOrDefault(a => a.unit == currentUnit);

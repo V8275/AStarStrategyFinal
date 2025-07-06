@@ -9,12 +9,14 @@ public class Melee : MonoBehaviour, IUnit
 
     private InputManager inputManager;
     private GameObject UnitUI;
+    private HealthManager healthManager;
 
     public void Init(Vector2Int spawnPosition)
     {
         if (isPlayer)
         {
             inputManager = GetComponent<InputManager>();
+            healthManager = GetComponent<HealthManager>();
             inputManager.Init(spawnPosition);
         }
     }
@@ -57,6 +59,11 @@ public class Melee : MonoBehaviour, IUnit
         return data;
     }
 
+    public Vector3 GetCurrentPosition()
+    {
+        return transform.position;
+    }
+
     public void SetName(string name)
     {
         gameObject.name = name;
@@ -70,5 +77,10 @@ public class Melee : MonoBehaviour, IUnit
     public void EnableUI()
     {
         UnitUI.GetComponent<Button>().interactable = true;
+    }
+
+    public HealthManager GetHealthController()
+    {
+        return healthManager;
     }
 }
