@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2416777651204641150}
   - component: {fileID: 4404889768529434008}
   - component: {fileID: 7504884495574577437}
+  - component: {fileID: -8536944944978878948}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Obstacle
@@ -59,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -105,3 +109,15 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-8536944944978878948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768327809471223401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5acc727a9f4a24148ada1f9f1a383dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

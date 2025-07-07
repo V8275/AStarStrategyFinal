@@ -19,6 +19,7 @@ Shader "Unlit/SimpleOutlineSh"
         Pass 
         {
             Name "Fill"
+            Tags { "LightMode" = "UniversalForward" }
             Cull Off
             ZTest [_ZTest]
             ZWrite Off
@@ -34,17 +35,20 @@ Shader "Unlit/SimpleOutlineSh"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_instancing
             #include "UnityCG.cginc"
 
             struct appdata
             {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
             {
                 float4 pos : SV_POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             float4 _OutlineColor;
@@ -53,6 +57,8 @@ Shader "Unlit/SimpleOutlineSh"
             v2f vert(appdata v)
             {
                 v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
                 
                 float3 viewPos = UnityObjectToViewPos(v.vertex);
                 float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
@@ -65,6 +71,7 @@ Shader "Unlit/SimpleOutlineSh"
 
             fixed4 frag(v2f i) : SV_Target
             {
+                UNITY_SETUP_INSTANCE_ID(i);
                 return _OutlineColor;
             }
             ENDCG
