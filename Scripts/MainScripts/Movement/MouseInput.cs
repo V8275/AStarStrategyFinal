@@ -39,12 +39,42 @@ public class MouseInput : MonoBehaviour
     {
         SetLayerForAllObjects(LayerMask.NameToLayer(OutlineLayer));
         if (Input.GetMouseButtonDown(0)) SelectUnit();
-        if (Input.GetMouseButtonDown(1)) AttackSelectedUnit();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1)) 
+            AttackSelectedUnit(RayCastToTarget());
     }
 
     private void OnMouseExit()
     {
         SetLayerForAllObjects(LayerMask.NameToLayer(DefaultLayer));
+    }
+
+    private TeamUnit RayCastToTarget()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            var gameManager = FindFirstObjectByType<GameManager>();
+            var otherTeams = gameManager.TeamController.GetOtherTeams();
+            GameObject hoveredObject = hit.collider.gameObject;
+
+            if(hoveredObject.CompareTag("Player"))
+                for (int i = 0; i < otherTeams.Count; i++)
+                {
+                    var selectedUnit = hoveredObject.GetComponent<IUnit>();
+                    if (otherTeams[i].units.Any(a=>a.unit == selectedUnit))
+                    {
+                        return otherTeams[i].units.FirstOrDefault(a => a.unit == currentUnit);
+                    }
+                }
+            else return null;
+        }
+        return null;
     }
 
     private void SetLayerForAllObjects(int layerIndex)
@@ -58,24 +88,15 @@ public class MouseInput : MonoBehaviour
         }
     }
 
-    private void AttackSelectedUnit()
+    private void AttackSelectedUnit(TeamUnit selectedUnit)
     {
-        var gameManager = FindFirstObjectByType<GameManager>();
-        var otherTeams = gameManager.TeamController.GetOtherTeams();
-
-        TeamUnit selectedUnit = null;
-
-        for (int i = 0; i < otherTeams.Count; i++)
+        if (selectedUnit != null)
         {
-            selectedUnit = otherTeams[i].units.FirstOrDefault(a => a.unit == currentUnit);
-            if (selectedUnit != null)
-            {
-                atkManager.Attack(selectedUnit);
-            }
-            else
-            {
-                Debug.LogWarning("Selected unit not found in current team units");
-            }
+            atkManager.Attack(selectedUnit);
+        }
+        else
+        {
+            Debug.LogWarning("Selected unit not found in current team units");
         }
     }
 

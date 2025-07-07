@@ -37,6 +37,11 @@ public class GameManager : MonoBehaviour
         get { return teamController; }
     }
 
+    public TeamUnit SelectedUnit
+    {
+        get { return selectedUnit; }
+    }
+
     private void Start()
     {
         Application.targetFrameRate = FrameRate;
